@@ -4,44 +4,37 @@ public class Main {
     public static void main(String[] args) {
         double currentOutstandingAmount = 1029230;
         double annualInterestRate = 8.5;
-        double years = 1.5;
-        double emiAmount = 11204;
-        double extraEmiAmount = 18800;
-        double percentageIncrease = 30; // 10% increase in extra EMI amount
+        double loanTermYears = 2;
+        double monthlyPayment = 11204;
+        double extraMonthlyPayment = 20000;
+        double percentageIncrease = 10; // 10% increase in extra monthly payment
         double totalPaid = 0;
         double totalInterest = 0;
-        double extraPerYear = 0;
+        double extraPaymentPerYear = 0;
 
-        for (int i = 1; i <= 12 * years; i++) {
+        for (int month = 1; month <= 12 * loanTermYears; month++) {
             double monthlyInterest = calculateMonthlyInterest(currentOutstandingAmount, annualInterestRate);
             totalInterest += monthlyInterest;
 
             currentOutstandingAmount += monthlyInterest;
-            currentOutstandingAmount -= (emiAmount + extraEmiAmount);
-            totalPaid += (emiAmount + extraEmiAmount);
+            currentOutstandingAmount -= (monthlyPayment + extraMonthlyPayment);
+            totalPaid += (monthlyPayment + extraMonthlyPayment);
 
-            System.out.printf("for month %d : %f  and interest is %f and monthly EMI %f%n", i, currentOutstandingAmount, monthlyInterest, (emiAmount + extraEmiAmount));
+            System.out.printf("For month %d: Remaining balance is %.2f and interest is %.2f and monthly payment is %.2f%n", month, currentOutstandingAmount, monthlyInterest, (monthlyPayment + extraMonthlyPayment));
 
-            // Calculate the new extra EMI amount after percentage increase
-            if (i % 12 == 0) {
-                extraEmiAmount = increaseExtraEmi(extraEmiAmount, percentageIncrease);
-                currentOutstandingAmount -= extraPerYear;
-                totalPaid += extraPerYear;
-                System.out.printf("total amount paid is %f and total interest increased is %f %n", totalPaid, totalInterest);
-            }
-            if (i == 12) {
-                currentOutstandingAmount -= 200000;
+            // Calculate the new extra monthly payment after percentage increase
+            if (month % 6 == 0) {
+                extraMonthlyPayment = increaseExtraPayment(extraMonthlyPayment, percentageIncrease);
+                currentOutstandingAmount -= extraPaymentPerYear;
+                totalPaid += extraPaymentPerYear;
+                System.out.printf("Total amount paid is %.2f and total interest increased is %.2f %n", totalPaid, totalInterest);
             }
         }
 
-        System.out.printf("Net remaining amount after %f years: ", years);
-        System.out.println(currentOutstandingAmount);
-        System.out.printf("Total paid in %f years: ", years);
-        System.out.println(totalPaid);
-        System.out.printf("Total interest paid in %f years: ", years);
-        System.out.println(totalInterest);
-        System.out.printf("Total outstanding + interest paid in %f years: ", years);
-        System.out.println(currentOutstandingAmount + totalInterest);
+        System.out.printf("Net remaining amount after %.2f years: %.2f%n", loanTermYears, currentOutstandingAmount);
+        System.out.printf("Total paid in %.2f years: %.2f%n", loanTermYears, totalPaid);
+        System.out.printf("Total interest paid in %.2f years: %.2f%n", loanTermYears, totalInterest);
+        System.out.printf("Total outstanding + interest paid in %.2f years: %.2f%n", loanTermYears, currentOutstandingAmount + totalInterest);
     }
 
     public static double calculateMonthlyInterest(double principal, double annualInterestRate) {
@@ -52,13 +45,13 @@ public class Main {
         return principal * monthlyInterestRate;
     }
 
-    public static double increaseExtraEmi(double extraEmiAmount, double percentageIncrease) {
-        // Calculate the increase in extra EMI amount
-        double increaseAmount = extraEmiAmount * (percentageIncrease / 100);
+    public static double increaseExtraPayment(double extraPayment, double percentageIncrease) {
+        // Calculate the increase in extra payment
+        double increaseAmount = extraPayment * (percentageIncrease / 100);
 
-        // Add the increase amount to the existing extra EMI amount
-        extraEmiAmount += increaseAmount;
+        // Add the increase amount to the existing extra payment
+        extraPayment += increaseAmount;
 
-        return extraEmiAmount;
+        return extraPayment;
     }
 }
